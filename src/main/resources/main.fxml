@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox alignment="center" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.happyshark.cloudstorage.Controller">
+
+    <MenuBar>
+        <Menu text="File">
+            <MenuItem onAction="#exitAction" text="Exit" />
+        </Menu>
+    </MenuBar>
+
+    <GridPane VBox.vgrow="ALWAYS">
+        <columnConstraints>
+            <ColumnConstraints percentWidth="50" />
+            <ColumnConstraints percentWidth="50" />
+        </columnConstraints>
+
+        <ListView fx:id="leftPanel" GridPane.columnIndex="0" GridPane.vgrow="ALWAYS" />
+        <ListView fx:id="rightPanel" visible="false" GridPane.columnIndex="1" GridPane.vgrow="ALWAYS" />
+        <GridPane fx:id="connectionSetupPanel" alignment="CENTER" GridPane.columnIndex="1" GridPane.vgrow="ALWAYS">
+
+            <Label text="Server" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="0">
+            <GridPane.margin>
+               <Insets bottom="10.0" left="5.0" />
+            </GridPane.margin></Label>
+            <Label text="IP address" GridPane.columnIndex="0" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+            <TextField prefWidth="120" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <GridPane.margin>
+               <Insets bottom="5.0" left="5.0" />
+            </GridPane.margin></TextField>
+            <Label text="Port" GridPane.columnIndex="0" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
+            <TextField prefWidth="120" GridPane.columnIndex="1" GridPane.rowIndex="2">
+            <GridPane.margin>
+               <Insets bottom="5.0" left="5.0" />
+            </GridPane.margin></TextField>
+
+            <Label text="Client" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="3">
+            <GridPane.margin>
+               <Insets bottom="10.0" left="5.0" top="10.0" />
+            </GridPane.margin></Label>
+            <Label text="Login" GridPane.columnIndex="0" GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
+            <TextField prefWidth="120" GridPane.columnIndex="1" GridPane.rowIndex="4">
+            <GridPane.margin>
+               <Insets bottom="5.0" left="5.0" />
+            </GridPane.margin></TextField>
+            <Label text="Password" GridPane.columnIndex="0" GridPane.halignment="RIGHT" GridPane.rowIndex="5" />
+            <PasswordField prefWidth="120" GridPane.columnIndex="1" GridPane.rowIndex="5">
+            <GridPane.margin>
+               <Insets bottom="5.0" left="5.0" />
+            </GridPane.margin></PasswordField>
+
+            <Button text="Connect" GridPane.columnIndex="1" GridPane.rowIndex="6" onAction="#connectAction">
+            <GridPane.margin>
+               <Insets left="5.0" />
+            </GridPane.margin></Button>
+         <columnConstraints>
+            <ColumnConstraints />
+            <ColumnConstraints />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+         </rowConstraints>
+
+        </GridPane>
+      <rowConstraints>
+         <RowConstraints />
+      </rowConstraints>
+
+    </GridPane>
+
+    <HBox>
+        <Button maxWidth="Infinity" text="Copy" HBox.hgrow="ALWAYS">
+         <HBox.margin>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </HBox.margin></Button>
+        <Button maxWidth="Infinity" text="Move" HBox.hgrow="ALWAYS">
+         <HBox.margin>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </HBox.margin></Button>
+        <Button maxWidth="Infinity" text="Delete" HBox.hgrow="ALWAYS">
+         <HBox.margin>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </HBox.margin></Button>
+        <Button maxWidth="Infinity" onAction="#exitAction" text="Exit" HBox.hgrow="ALWAYS">
+         <HBox.margin>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </HBox.margin></Button>
+    </HBox>
+</VBox>
