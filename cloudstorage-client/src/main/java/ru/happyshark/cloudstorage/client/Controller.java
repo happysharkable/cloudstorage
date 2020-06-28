@@ -1,4 +1,4 @@
-package ru.happyshark.cloudstorage;
+package ru.happyshark.cloudstorage.client;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;

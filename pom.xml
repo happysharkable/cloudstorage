@@ -6,7 +6,12 @@
 
     <groupId>ru.happyshark.cloudstorage</groupId>
     <artifactId>cloudstorage</artifactId>
+    <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
+    <modules>
+        <module>cloudstorage-client</module>
+        <module>cloudstorage-server</module>
+    </modules>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>

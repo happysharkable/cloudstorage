@@ -3,10 +3,12 @@
 
 # User-specific stuff
 .idea/
-target/
+*/target/
 
 # Tests
-/src/test/
+/cloudstorage-client/src/test/
+/cloudstorage-server/src/test/
 
 # Logs
 *.log
+
