@@ -11,6 +11,7 @@
     <modules>
         <module>cloudstorage-client</module>
         <module>cloudstorage-server</module>
+        <module>cloudstorage-library</module>
     </modules>
 
     <properties>
