@@ -4,18 +4,18 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
+import ru.happyshark.cloudstorage.library.LocalUtils;
+import ru.happyshark.cloudstorage.library.NetworkUtils;
 
 import java.io.IOException;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.ResourceBundle;
-import java.util.stream.Collectors;
 
 public class Controller implements Initializable {
 
@@ -28,36 +28,75 @@ public class Controller implements Initializable {
     @FXML
     GridPane connectionSetupPanel;
 
-    private Path clientPath = Paths.get("./client-files");
+    @FXML
+    TextField serverAddress;
+
+    @FXML
+    TextField serverPort;
+
+    @FXML
+    TextField loginField;
+
+    @FXML
+    PasswordField passwordField;
+
+    @FXML
+    Label connectionFailedLabel;
+
+    private Client client;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         try {
-            leftPanel.getItems().addAll(getFilesFromDirectory(clientPath));
+            client = new Client();
+            leftPanel.getItems().addAll(LocalUtils.getFileListFromDirectory(Paths.get("./client-files")));
+
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    public void connectAction(ActionEvent actionEvent) {
+
+        String address = serverAddress.getText();
+        int port = Integer.parseInt(serverPort.getText());
+        String login = loginField.getText();
+        String password = passwordField.getText();
+
+        try {
+            client.connect(this, address, port, login, password);
+            updateCloudStorageFileList();
+            connectionSetupPanel.setVisible(false);
+            rightPanel.setVisible(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public void exitAction(ActionEvent actionEvent) {
+        client.disconnect();
         Platform.exit();
     }
 
-    public void connectAction(ActionEvent actionEvent) {
-        connectionSetupPanel.setVisible(false);
-        rightPanel.setVisible(true);
+    public void copyFilePressed(ActionEvent actionEvent) {
+        String srcFile;
+        srcFile = "./client-files/" + leftPanel.getSelectionModel().getSelectedItem();
+        try {
+            client.sendFile(Paths.get(srcFile));
+            updateCloudStorageFileList();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    private List<String> getFilesFromDirectory(Path path) throws IOException {
-        List<String> out = new ArrayList<>();
-        StringBuilder stb = new StringBuilder();
-        List<Path> paths = Files.list(path).collect(Collectors.toList());
-        for (Path p : paths) {
-            stb.append(p.getFileName().toString()).append("\t\t").append('|').append('\t').append(Files.size(p)).append(" bytes");
-            out.add(stb.toString());
-            stb.setLength(0);
-        }
+    public void updateCloudStorageFileList() {
+        NetworkUtils.sendCommand("/list", Network.getInstance().getCurrentChannel());
+    }
 
-        return out;
+    public void setCloudStorageFileList(String files) {
+        Platform.runLater(() -> {
+            rightPanel.getItems().clear();
+            rightPanel.getItems().addAll(files.split(";"));
+        });
     }
 }

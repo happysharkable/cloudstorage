@@ -27,12 +27,12 @@
                <Insets bottom="10.0" left="5.0" />
             </GridPane.margin></Label>
             <Label text="IP address" GridPane.columnIndex="0" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
-            <TextField prefWidth="120" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <TextField prefWidth="120" fx:id="serverAddress" text="127.0.0.1" GridPane.columnIndex="1" GridPane.rowIndex="1">
             <GridPane.margin>
                <Insets bottom="5.0" left="5.0" />
             </GridPane.margin></TextField>
             <Label text="Port" GridPane.columnIndex="0" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
-            <TextField prefWidth="120" GridPane.columnIndex="1" GridPane.rowIndex="2">
+            <TextField prefWidth="120" fx:id="serverPort" text="8189" GridPane.columnIndex="1" GridPane.rowIndex="2">
             <GridPane.margin>
                <Insets bottom="5.0" left="5.0" />
             </GridPane.margin></TextField>
@@ -42,15 +42,16 @@
                <Insets bottom="10.0" left="5.0" top="10.0" />
             </GridPane.margin></Label>
             <Label text="Login" GridPane.columnIndex="0" GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
-            <TextField prefWidth="120" GridPane.columnIndex="1" GridPane.rowIndex="4">
+            <TextField prefWidth="120" fx:id="loginField" GridPane.columnIndex="1" GridPane.rowIndex="4">
             <GridPane.margin>
                <Insets bottom="5.0" left="5.0" />
             </GridPane.margin></TextField>
             <Label text="Password" GridPane.columnIndex="0" GridPane.halignment="RIGHT" GridPane.rowIndex="5" />
-            <PasswordField prefWidth="120" GridPane.columnIndex="1" GridPane.rowIndex="5">
+            <PasswordField prefWidth="120" fx:id="passwordField" GridPane.columnIndex="1" GridPane.rowIndex="5">
             <GridPane.margin>
                <Insets bottom="5.0" left="5.0" />
             </GridPane.margin></PasswordField>
+            <Label text="Connection failed" fx:id="connectionFailedLabel" visible="false" GridPane.columnIndex="0" GridPane.halignment="RIGHT" GridPane.rowIndex="6" />
 
             <Button text="Connect" GridPane.columnIndex="1" GridPane.rowIndex="6" onAction="#connectAction">
             <GridPane.margin>
@@ -78,7 +79,7 @@
     </GridPane>
 
     <HBox>
-        <Button maxWidth="Infinity" text="Copy" HBox.hgrow="ALWAYS">
+        <Button maxWidth="Infinity" onAction="#copyFilePressed" text="Copy" HBox.hgrow="ALWAYS">
          <HBox.margin>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </HBox.margin></Button>
