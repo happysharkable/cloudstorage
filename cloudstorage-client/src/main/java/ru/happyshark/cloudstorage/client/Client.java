@@ -1,10 +1,11 @@
 package ru.happyshark.cloudstorage.client;
 
-import com.sun.xml.internal.rngom.digested.DContainerPattern;
 import ru.happyshark.cloudstorage.library.NetworkUtils;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.concurrent.CountDownLatch;
 
 public class Client {
@@ -15,7 +16,7 @@ public class Client {
         networkStarter = new CountDownLatch(1);
     }
 
-    public void connect(Controller controller, String address, int port, String login, String password) throws Exception {
+    public void connect(Controller controller, String address, int port) throws Exception {
         System.out.println("Trying to connect to " + address + ":" + port);
         new Thread(() -> Network.getInstance().start(controller, networkStarter, address, port)).start();
         networkStarter.await();
@@ -25,7 +26,7 @@ public class Client {
         Network.getInstance().stop();
     }
 
-    public void sendFile(Path path) throws IOException {
+    public void sendFileToServer(Path path) throws IOException {
         NetworkUtils.sendFile(path, Network.getInstance().getCurrentChannel(), future -> {
             if (!future.isSuccess()) {
                 future.cause().printStackTrace();
@@ -34,6 +35,14 @@ public class Client {
                 System.out.println("Файл успешно передан");
             }
         });
+    }
+
+    public void copyFileToServer(String filename) throws Exception {
+        sendFileToServer(Paths.get("./client-files/" + filename));
+    }
+
+    public void deleteFile(String filename) throws Exception {
+        Files.delete(Paths.get("./client-files/" + filename));
     }
 
     public void requestFile(String filename) {

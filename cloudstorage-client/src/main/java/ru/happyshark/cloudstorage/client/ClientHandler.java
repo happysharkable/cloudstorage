@@ -3,20 +3,18 @@ package ru.happyshark.cloudstorage.client;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
-import ru.happyshark.cloudstorage.library.LocalUtils;
-import ru.happyshark.cloudstorage.library.NetworkUtils;
 
 import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.List;
 
 public class ClientHandler extends ChannelInboundHandlerAdapter {
 
     public enum State {
-        IDLE, COMMAND_LENGTH, COMMAND, COMMAND_HANDLE, STRING_LENGTH, STRING, NAME_LENGTH, NAME, FILE_LENGTH, FILE
+        IDLE,
+        COMMAND_LENGTH, COMMAND, COMMAND_HANDLE,
+        STRING_LENGTH, STRING,
+        NAME_LENGTH, NAME, FILE_LENGTH, FILE
     }
 
     private State currentState = State.IDLE;

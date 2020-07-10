@@ -15,7 +15,9 @@ import java.util.List;
 public class ServerHandler extends ChannelInboundHandlerAdapter {
 
     public enum State {
-        IDLE, COMMAND_LENGTH, COMMAND, COMMAND_HANDLE, NAME_LENGTH, NAME, FILE_LENGTH, FILE
+        IDLE,
+        COMMAND_LENGTH, COMMAND, COMMAND_HANDLE,
+        NAME_LENGTH, NAME, FILE_LENGTH, FILE
     }
 
     private State currentState = State.IDLE;

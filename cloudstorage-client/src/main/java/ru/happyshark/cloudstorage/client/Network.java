@@ -56,6 +56,8 @@ public class Network {
     }
 
     public void stop() {
-        currentChannel.close();
+        if (currentChannel != null) {
+            currentChannel.close();
+        }
     }
 }

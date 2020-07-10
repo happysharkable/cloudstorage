@@ -9,9 +9,7 @@ import javafx.scene.layout.GridPane;
 import ru.happyshark.cloudstorage.library.LocalUtils;
 import ru.happyshark.cloudstorage.library.NetworkUtils;
 
-import java.io.IOException;
 import java.net.URL;
-import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ResourceBundle;
 
@@ -53,44 +51,68 @@ public class Controller implements Initializable {
 
         String address = serverAddress.getText();
         int port = Integer.parseInt(serverPort.getText());
-        String login = loginField.getText();
-        String password = passwordField.getText();
+        //String login = loginField.getText();
+        //String password = passwordField.getText();
 
         try {
-            client.connect(this, address, port, login, password);
+            client.connect(this, address, port);
             updateCloudStorageFileList();
             connectionSetupPanel.setVisible(false);
             rightPanel.setVisible(true);
         } catch (Exception e) {
-            e.printStackTrace();
+            new Alert(Alert.AlertType.ERROR, "Unable to connect to server", ButtonType.OK).showAndWait();
         }
     }
 
-    public void exitAction(ActionEvent actionEvent) {
+    public void btnExitAction(ActionEvent actionEvent) {
         client.disconnect();
         Platform.exit();
     }
 
-    public void copyFilePressed(ActionEvent actionEvent) {
+    public void btnCopyFileAction(ActionEvent actionEvent) {
         // копирование файла на сервер
         if (leftPanel.isFocused()) {
             try {
-                String srcFile = "./client-files/" + leftPanel.getSelectionModel().getSelectedItem();
-                client.sendFile(Paths.get(srcFile));
+                client.copyFileToServer(leftPanel.getSelectionModel().getSelectedItem());
                 updateCloudStorageFileList();
             } catch (Exception e) {
-                e.printStackTrace();
+                new Alert(Alert.AlertType.ERROR, "Unable to copy file to server", ButtonType.OK);
             }
         }
 
         // копирование файла с сервера
         if (rightPanel.isFocused()) {
+            client.requestFile(rightPanel.getSelectionModel().getSelectedItem());
+        }
+    }
+
+    // TODO move action
+    public void btnMoveFileAction(ActionEvent actionEvent) {
+        // перемещение файла с клиента на сервер
+        if (leftPanel.isFocused()) {
+
+        }
+
+        // перемещение файла с сервера на клиент
+        if (rightPanel.isFocused()) {
+
+        }
+    }
+
+    public void btnDeleteFileAction(ActionEvent actionEvent) {
+        // удаление файла на клиенте
+        if (leftPanel.isFocused()) {
             try {
-                String requestedFile = rightPanel.getSelectionModel().getSelectedItem();
-                client.requestFile(requestedFile);
+                client.deleteFile(leftPanel.getSelectionModel().getSelectedItem());
+                updateClientStorageFileList();
             } catch (Exception e) {
-                e.printStackTrace();
-            }
+                new Alert(Alert.AlertType.ERROR, "Unable to delete file", ButtonType.OK).showAndWait();
+            };
+        }
+
+        // удаление файла на сервере
+        if (rightPanel.isFocused()) {
+            NetworkUtils.sendCommand("/delete " + rightPanel.getSelectionModel().getSelectedItem(), Network.getInstance().getCurrentChannel());
         }
     }
 
@@ -101,7 +123,7 @@ public class Controller implements Initializable {
                 leftPanel.getItems().clear();
                 leftPanel.getItems().addAll(LocalUtils.getFileListFromDirectory(Paths.get("./client-files")));
             } catch (Exception e) {
-                e.printStackTrace();
+                new Alert(Alert.AlertType.WARNING, "Unable to update client file list", ButtonType.OK).showAndWait();
             }
         });
     }
@@ -117,26 +139,5 @@ public class Controller implements Initializable {
             rightPanel.getItems().clear();
             rightPanel.getItems().addAll(files.split(";"));
         });
-    }
-
-    public void moveFilePressed(ActionEvent actionEvent) {
-        //TODO
-    }
-
-    public void deleteFilePressed(ActionEvent actionEvent) {
-        if (leftPanel.isFocused()) {
-            try {
-                Files.delete(Paths.get("./client-files/" + leftPanel.getSelectionModel().getSelectedItem()));
-                updateClientStorageFileList();
-            } catch (Exception e) {
-                new Alert(Alert.AlertType.ERROR,
-                        "Unable to delete file " + leftPanel.getSelectionModel().getSelectedItem(),
-                        ButtonType.OK).showAndWait();
-            }
-        }
-
-        if (rightPanel.isFocused()) {
-            NetworkUtils.sendCommand("/delete " + rightPanel.getSelectionModel().getSelectedItem(), Network.getInstance().getCurrentChannel());
-        }
     }
 }
