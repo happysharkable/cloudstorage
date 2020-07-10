@@ -32,6 +32,11 @@ public class NetworkUtils {
         }
     }
 
+    public static void requestFile(String filename, Channel channel) {
+        // запрос на скачивание файла (команда)
+        sendCommand("/file " + filename, channel);
+    }
+
     public static void sendCommand(String command, Channel channel) {
         // служебный байт (26 - команда)
         sendCommandByte(channel, 26);

@@ -8,6 +8,7 @@ import sun.nio.ch.Net;
 import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 
@@ -70,6 +71,11 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
                     NetworkUtils.sendFile(Paths.get("./server-files/" + requestedFile),ctx.channel(), future -> {
                         if (future.isSuccess()) System.out.println("File " + requestedFile + " transferred");
                     });
+                }
+                if (receivedCommand.contains("/delete")) {
+                    String fileToDelete = receivedCommand.split(" ")[1];
+                    Files.deleteIfExists(Paths.get("./server-files/" + fileToDelete));
+                    NetworkUtils.sendCommand("/update", ctx.channel());
                 }
                 receivedCommand = null;
                 currentState = State.IDLE;

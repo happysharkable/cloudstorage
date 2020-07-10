@@ -35,4 +35,8 @@ public class Client {
             }
         });
     }
+
+    public void requestFile(String filename) {
+        NetworkUtils.requestFile(filename, Network.getInstance().getCurrentChannel());
+    }
 }

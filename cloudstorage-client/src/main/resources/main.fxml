@@ -79,15 +79,15 @@
     </GridPane>
 
     <HBox>
-        <Button maxWidth="Infinity" onAction="#copyFilePressed" text="Copy" HBox.hgrow="ALWAYS">
+        <Button maxWidth="Infinity" onAction="#copyFilePressed" focusTraversable="false" text="Copy" HBox.hgrow="ALWAYS">
          <HBox.margin>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </HBox.margin></Button>
-        <Button maxWidth="Infinity" text="Move" HBox.hgrow="ALWAYS">
+        <Button maxWidth="Infinity" onAction="#moveFilePressed" focusTraversable="false" text="Move" HBox.hgrow="ALWAYS">
          <HBox.margin>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </HBox.margin></Button>
-        <Button maxWidth="Infinity" text="Delete" HBox.hgrow="ALWAYS">
+        <Button maxWidth="Infinity" onAction="#deleteFilePressed" text="Delete" focusTraversable="false" HBox.hgrow="ALWAYS">
          <HBox.margin>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </HBox.margin></Button>

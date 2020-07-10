@@ -3,15 +3,20 @@ package ru.happyshark.cloudstorage.client;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import ru.happyshark.cloudstorage.library.LocalUtils;
+import ru.happyshark.cloudstorage.library.NetworkUtils;
 
 import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.List;
 
 public class ClientHandler extends ChannelInboundHandlerAdapter {
 
     public enum State {
-        IDLE, STRING_LENGTH, STRING, NAME_LENGTH, NAME, FILE_LENGTH, FILE
+        IDLE, COMMAND_LENGTH, COMMAND, COMMAND_HANDLE, STRING_LENGTH, STRING, NAME_LENGTH, NAME, FILE_LENGTH, FILE
     }
 
     private State currentState = State.IDLE;
@@ -20,6 +25,7 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
     private long fileLength;
     private long receivedFileLength;
     private String receivedString;
+    private String receivedCommand;
     private BufferedOutputStream out;
 
     public ClientHandler(Controller controller) {
@@ -36,12 +42,41 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
                     currentState = State.NAME_LENGTH;
                     receivedFileLength = 0L;
                     System.out.println("STATE: Start file receiving");
+                } else if (readed == (byte) 26) {
+                    currentState = State.COMMAND_LENGTH;
+                    System.out.println("STATE: Waiting for command");
                 } else if (readed == (byte) 27) {
                     currentState = State.STRING_LENGTH;
                     System.out.println("STATE: Waiting for string");
                 } else {
                     System.out.println("ERROR: Invalid first byte - " + readed);
                 }
+            }
+
+            if (currentState == State.COMMAND_LENGTH) {
+                if (buf.readableBytes() >= 4) {
+                    System.out.println("STATE: Get command length");
+                    nextLength = buf.readInt();
+                    currentState = State.COMMAND;
+                }
+            }
+
+            if (currentState == State.COMMAND) {
+                if (buf.readableBytes() >= nextLength) {
+                    byte[] commandBytes = new byte[nextLength];
+                    buf.readBytes(commandBytes);
+                    receivedCommand = new String(commandBytes, StandardCharsets.UTF_8);
+                    System.out.println("STATE: Command received - " + receivedCommand);
+                    currentState = State.COMMAND_HANDLE;
+                }
+            }
+
+            if (currentState == State.COMMAND_HANDLE) {
+                if (receivedCommand.equals("/update")) {
+                    controller.updateCloudStorageFileList();
+                }
+                receivedCommand = null;
+                currentState = State.IDLE;
             }
 
             if (currentState == State.STRING_LENGTH) {
@@ -96,6 +131,7 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
                     if (fileLength == receivedFileLength) {
                         currentState = State.IDLE;
                         System.out.println("File received");
+                        controller.updateClientStorageFileList();
                         out.close();
                         break;
                     }
